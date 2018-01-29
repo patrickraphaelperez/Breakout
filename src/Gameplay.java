@@ -69,6 +69,41 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 			if(new Rectangle(ballposX, ballposY, 20, 20).intersects(new Rectangle(playerX, 550, 100, 8))) {
 				ballYdir = -ballYdir;
 			}
+			
+			//create each and every brick
+			A: for(int i = 0; i < map.map.length; i++){
+				for(int j = 0; j < map.map[0].length; j++){
+					if(map.map[i][j] > 0) {
+						int brickX = j*map.brickWidth + 80;
+						int brickY = i*map.brickHeight + 50;
+						int brickWidth = map.brickWidth;
+						int brickHeight = map.brickHeight;
+						
+						//create the rectangle around the brick
+						Rectangle rect = new Rectangle(brickX, brickY, brickWidth, brickHeight);
+						//create a rectangle around the bal
+						Rectangle ballRect = new Rectangle(ballposX, ballposY, 20, 20);
+						Rectangle brickRect = rect;
+						
+						//upon hit
+						if(ballRect.intersects(brickRect)){
+							map.setBrickValue(0, i, j);
+							totalBricks--;
+							score += 5;
+							
+							//moves ball to opposite direction
+							if(ballposX + 19 <= brickRect.x || ballposX + 1 >= brickRect.x + brickRect.width){
+								ballXdir = -ballXdir;
+							} else {
+								ballYdir = -ballYdir;
+							}
+							
+							break A;
+						}
+					}
+				}
+			}
+			
 			ballposX += ballXdir;
 			ballposY += ballYdir;
 			if(ballposX < 0){
